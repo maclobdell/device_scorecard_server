@@ -101,7 +101,7 @@ def show_target(target_id):
    
    
 
-@app.route('/target_data/api/v1.0/target', methods = ['GET'])
+@app.route('/target_data/api/v1.0/targets', methods = ['GET'])
 #@auth.login_required
 def get_targets():
     return jsonify( { 'targets': map(make_public_target, targets) } )
