@@ -1,8 +1,13 @@
 #!flask/bin/python
+from __future__ import print_function
+
 from flask import Flask, jsonify, abort, request, make_response, url_for, render_template, redirect
 #from flask.ext.httpauth import HTTPBasicAuth
 
+
 app = Flask(__name__, static_url_path = "")
+
+log = open("log.txt", "w")
 #auth = HTTPBasicAuth()
 
 #@auth.get_password
@@ -24,21 +29,46 @@ def not_found(error):
 def not_found(error):
     return make_response(jsonify( { 'error': 'Not found' } ), 404)
 
+
 targets = [
     {
         'id': 1,
-        'name': u'target1',
-        'description': 
-            { 'FLASH': 'x', 'RTC': 'x', 'SPI': 'x', 'I2C': 'x', 'TRNG': 'x', 'SLEEP': 'x'},
+        'name': 'LPC546XX',
+        'description': [
+            {
+                "ver": "Mbed OS 5.8",
+                "name": "LPC546XX",
+                "date": "May 2, 2018",
+                "target_data" : { 'FLASH': 'N', 'RTC': 'Y', 'SPI': 'Y', 'I2C': 'Y', 'TRNG': 'N', 'SLEEP': 'Y'}
+            },            
+            {
+                "ver": "Mbed OS 5.7",
+                "name": "LPC546XX",
+                "date": "May 2, 2018",
+                "target_data" : { 'FLASH': 'N', 'RTC': 'N', 'SPI': 'N', 'I2C': 'Y', 'TRNG': 'N', 'SLEEP': 'Y'}
+            }  
+        ],                     
         'uri' : 'x'
     },
     {
         'id': 2,
-        'name': u'target2',
-        'description': 
-            { 'FLASH': 'x', 'RTC': 'x', 'SPI': 'x', 'I2C': 'x', 'TRNG': 'x', 'SLEEP': 'x'},
+        'name': 'LPC54114',
+        'description': [
+            {
+                "ver": "Mbed OS 5.8",
+                "name": "LPC54114",
+                "date": "May 2, 2018",
+                "target_data" : { 'FLASH': 'N', 'RTC': 'Y', 'SPI': 'N', 'I2C': 'Y', 'TRNG': 'N', 'SLEEP': 'Y'}
+            },            
+            {
+                "ver": "Mbed OS 5.7",
+                "name": "LPC54114",
+                "date": "May 2, 2018",
+                "target_data" : { 'FLASH': 'Y', 'RTC': 'Y', 'SPI': 'N', 'I2C': 'Y', 'TRNG': 'N', 'SLEEP': 'Y'}
+            }  
+        ],                     
         'uri' : 'x'
-    }
+    },
 ]
 
 def make_public_target(target):
@@ -67,7 +97,7 @@ def show_target(target_id):
     target = filter(lambda t: t['id'] == target_id, targets)
     if len(target) == 0:
         abort(404)
-    return render_template('target_data.html', target_data=target[0])
+    return render_template('scorecard_template.html', target_data=target[0])
    
    
 
@@ -100,17 +130,23 @@ def create_target():
 @app.route('/target_data/api/v1.0/targets/<int:target_id>', methods = ['PUT'])
 #@auth.login_required
 def update_target(target_id):
+    
     target = filter(lambda t: t['id'] == target_id, targets)
+    print(" update_target", file=log)
+     
     if len(target) == 0:
+        print (" length of target zero", file=log)
         abort(404)
     if not request.json:
-        abort(400)
-    if 'name' in request.json and type(request.json['name']) != unicode:
-        abort(400)
+       print(" not proper json", file=log)
+       abort(400)
     if 'description' in request.json and type(request.json['description']) is not unicode:
+        print(" description is not unicode", file=log)
         abort(400)
-    target[0]['name'] = request.json.get('name', target[0]['name'])
-    target[0]['description'] = request.json.get('description', target[0]['description'])
+    print(request.json.get('description'), file=log)
+    #target[0]['description'].append(request.json.get('description', target[0]['description']))
+    target[0]['description'].append(request.json.get('description'))
+        
     return jsonify( { 'target': (target[0]) } )
 
 @app.route('/target_data/api/v1.0/targets/<int:target_id>', methods = ['DELETE'])
