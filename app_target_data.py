@@ -4,10 +4,10 @@ from __future__ import print_function
 from flask import Flask, jsonify, abort, request, make_response, url_for, render_template, redirect
 #from flask.ext.httpauth import HTTPBasicAuth
 
+import sys
 
 app = Flask(__name__, static_url_path = "")
 
-log = open("log.txt", "w")
 #auth = HTTPBasicAuth()
 
 #@auth.get_password
@@ -132,20 +132,21 @@ def create_target():
 def update_target(target_id):
     
     target = filter(lambda t: t['id'] == target_id, targets)
-    print(" update_target", file=log)
+    print(" update_target", file=sys.stderr)
      
     if len(target) == 0:
-        print (" length of target zero", file=log)
+        print (" length of target zero", file=sys.stderr)
         abort(404)
     if not request.json:
-       print(" not proper json", file=log)
-       abort(400)
-    if 'description' in request.json and type(request.json['description']) is not unicode:
-        print(" description is not unicode", file=log)
-        abort(400)
-    print(request.json.get('description'), file=log)
+       print(" not proper json", file=sys.stderr)
+       abort(400) 
+              
+    print(request.json, file=sys.stderr)
+    #print(request.json, file=sys.stderr)
+         
+    #.get('description'), file=sys.stderr)
     #target[0]['description'].append(request.json.get('description', target[0]['description']))
-    target[0]['description'].append(request.json.get('description'))
+    target[0]['description'] = (request.json.get('description')) + target[0]['description']
         
     return jsonify( { 'target': (target[0]) } )
 
