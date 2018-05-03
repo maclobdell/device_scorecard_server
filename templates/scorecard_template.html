@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+    </style>
+    <title>Targets</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <style type="text/css">
+      .container {
+        max-width: 500px;
+        padding-top: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+        <h2>{{target_data.get('name')}}</h2> 
+        <ul style="list-style-type: disc; padding-bottom: 0;">
+            {% for d in target_data.description %}
+                <li> {{d.ver}} </li>   
+                    <table>
+                    <tr>
+                      <th>Feature</th>
+                      <th>Enabled</th>
+                    </tr>
+                    <tr>
+                    {% for k in d.target_data %}
+                        <td> {{k}} </td>
+                        <td> {{d.target_data.get(k)}} </td>
+                        </tr>
+                    {% endfor %}                
+                    </table>
+           {% endfor %}                
+        </ul>
+    </div>
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  </body>
+</html>
