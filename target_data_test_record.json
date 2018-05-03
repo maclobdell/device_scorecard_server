@@ -1,0 +1,10 @@
+{
+  "description" : [
+     {    
+        "ver": "Mbed OS 5.9",
+        "name": "LPC54114",
+        "date": "May 2, 2018",
+        "target_data" : { "FLASH": "Y", "RTC": "Y", "SPI": "N", "I2C": "Y", "TRNG": "N", "SLEEP": "Y"}  
+     }
+  ] 
+}
